@@ -1,7 +1,7 @@
 # Created by Gabriel Martell
 
 '''
-Version 1.1 (04/02/2024)
+Version 1.11 (04/02/2024)
 =========================================================
 queries.py (Carleton University COMP3005 - Database Management Student Template Code)
 
@@ -128,8 +128,8 @@ def get_time(cursor, conn, sql_query):
         else:
             print("Execution Time not found in EXPLAIN ANALYZE output.")
             return f"NA"
-    except:
-        print("[ERROR] Error getting time.")
+    except Exception as error:
+        print(f"[ERROR] Error getting time.\n{error}")
 
 
 # Write the results into some Q_n CSV. If the is an error with the query, it is a INC result - Do NOT Modify
@@ -141,7 +141,7 @@ def write_csv(execution_time, cursor, conn, i):
         rows = cursor.fetchall()
         filename = f"{dir_path}/Q_{i}.csv"
 
-        with open(filename, 'w', newline='') as csvfile:
+        with open(filename, 'w', encoding='utf-8', newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
             
             # Write column names to the CSV file
@@ -168,7 +168,9 @@ def Q_1(cursor, conn, execution_time):
     #==========================================================================
     # Enter QUERY within the quotes:
 
-    query = """             SELECT 
+    query = """ 
+
+        SELECT 
             p.player_name,
             AVG(s.statsbomb_xg) AS avg_xg
         FROM 
@@ -184,7 +186,9 @@ def Q_1(cursor, conn, execution_time):
         GROUP BY 
             p.player_id, p.player_name
         ORDER BY 
-            avg_xg DESC; """
+            avg_xg DESC;
+
+    """
 
     #==========================================================================
 
@@ -204,7 +208,8 @@ def Q_2(cursor, conn, execution_time):
     # Enter QUERY within the quotes:
 
     query = """ 
-    SELECT 
+
+SELECT 
     p.player_name,
     COUNT(s.shot_id) AS shot_count
 FROM 
@@ -224,7 +229,8 @@ HAVING
 ORDER BY 
     shot_count DESC;
 
-"""
+
+    """
 
     #==========================================================================
 
@@ -268,7 +274,7 @@ ORDER BY
 
 
 
-"""
+    """
 
     #==========================================================================
 
@@ -300,7 +306,7 @@ GROUP BY t.team_name
 HAVING COUNT(p.pass_id) >= 1
 ORDER BY pass_count DESC;
 
-"""
+    """
 
     #==========================================================================
 
@@ -318,7 +324,7 @@ def Q_5(cursor, conn, execution_time):
     #==========================================================================    
     # Enter QUERY within the quotes:
     
-    query = """ 
+    query = """
 
 SELECT p.player_name, COUNT(pa.recipient_player_id) AS pass_count
 FROM passes pa
@@ -332,7 +338,7 @@ GROUP BY p.player_name
 HAVING COUNT(pa.recipient_player_id) >= 1
 ORDER BY pass_count DESC;
 
-"""
+     """
 
     #==========================================================================
 
@@ -364,7 +370,7 @@ GROUP BY t.team_name
 HAVING COUNT(s.shot_id) >= 1
 ORDER BY shot_count DESC; 
 
-"""
+    """
 
     #==========================================================================
 
@@ -397,7 +403,7 @@ GROUP BY p.player_name
 HAVING COUNT(pa.pass_id) >= 1
 ORDER BY through_ball_count DESC;
 
-"""
+    """
 
     #==========================================================================
 
@@ -415,7 +421,7 @@ def Q_8(cursor, conn, execution_time):
     #==========================================================================    
     # Enter QUERY within the quotes:
     
-    query = """
+    query = """ 
 
 SELECT t.team_name, COUNT(pa.pass_id) AS through_ball_count
 FROM passes pa
@@ -430,7 +436,8 @@ GROUP BY t.team_name
 HAVING COUNT(pa.pass_id) >= 1
 ORDER BY through_ball_count DESC;
 
- """
+
+    """
 
     #==========================================================================
 
@@ -448,7 +455,8 @@ def Q_9(cursor, conn, execution_time):
     #==========================================================================    
     # Enter QUERY within the quotes:
     
-    query = """ 
+    query = """
+
 SELECT p.player_name, COUNT(e.event_id) AS successful_dribbles
 FROM events e
 JOIN matches m ON e.match_id = m.match_id
@@ -461,7 +469,8 @@ WHERE c.competition_name = 'La Liga'
 GROUP BY p.player_name
 HAVING COUNT(e.event_id) >= 1
 ORDER BY successful_dribbles DESC;
-"""
+
+     """
 
     #==========================================================================
 
@@ -479,7 +488,8 @@ def Q_10(cursor, conn, execution_time):
     #==========================================================================    
     # Enter QUERY within the quotes:
     
-    query = """ 
+    query = """
+
 SELECT p.player_name, COUNT(e.event_id) AS dribbled_past_count
 FROM events e
 JOIN matches m ON e.match_id = m.match_id
@@ -492,7 +502,9 @@ WHERE c.competition_name = 'La Liga'
 GROUP BY p.player_name
 HAVING COUNT(e.event_id) >= 1
 ORDER BY dribbled_past_count ASC;
-"""
+
+
+     """
 
     #==========================================================================
 
@@ -541,4 +553,3 @@ except Exception as error:
     print(error)
     #print("[ERROR]: Failure to connect to database.")
 #_______________________________________________________
-
